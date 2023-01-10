@@ -16,27 +16,41 @@ function sanitizeImages() {
 
 function changeImageRight() {
   let currentImg = document.querySelector('img').src;
+  let ulArray = [...document.querySelector('.slider').childNodes];
+  let thumbIndex = ulArray.findIndex( elem => String(elem.classList).includes('thumbFocus'));
+  let string = String(document.querySelector('.thumbFocus').classList);
+
+  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
 
   if (smallImgs.indexOf(currentImg) === smallImgs.length - 1) {
     document.querySelector('img').src = smallImgs[0];
-    document.querySelector('#big').href = imgBank[0];
+    document.querySelector('.big').href = imgBank[0];
+    ulArray[0].classList += ' thumbFocus';
   }
   else  {
     document.querySelector('img').src = smallImgs[smallImgs.indexOf(currentImg) + 1];
-    document.querySelector('#big').href = imgBank[smallImgs.indexOf(currentImg) + 1];
+    document.querySelector('.big').href = imgBank[smallImgs.indexOf(currentImg) + 1];
+    ulArray[thumbIndex + 1].classList += ' thumbFocus';
   }
 }
 
 function changeImageLeft() {
   let currentImg = document.querySelector('img').src;
+  let ulArray = [...document.querySelector('.slider').childNodes];
+  let thumbIndex = ulArray.findIndex( elem => String(elem.classList).includes('thumbFocus'));
+  let string = String(document.querySelector('.thumbFocus').classList);
+
+  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
 
   if (smallImgs.indexOf(currentImg) === 0) {
     document.querySelector('img').src = smallImgs[smallImgs.length - 1];
-    document.querySelector('#big').href = imgBank[smallImgs.length - 1];
+    document.querySelector('.big').href = imgBank[smallImgs.length - 1];
+    ulArray[smallImgs.length - 1].classList += ' thumbFocus';
   }
   else {
     document.querySelector('img').src = smallImgs[smallImgs.indexOf(currentImg) - 1];
-    document.querySelector('#big').href = imgBank[smallImgs.indexOf(currentImg) - 1];
+    document.querySelector('.big').href = imgBank[smallImgs.indexOf(currentImg) - 1];
+    ulArray[thumbIndex - 1].classList += ' thumbFocus';
   }
 }
 
@@ -58,7 +72,7 @@ function processData() {
   
   storeImagesPreview();
   document.querySelector('img').src = smallImgs[0];
-  document.querySelector('#big').href = imgBank[0];
+  document.querySelector('.big').href = imgBank[0];
   document.querySelector('figcaption').textContent = `${storedData.title}${', ' + storedData.objectDate}`;
   if (storedData.artistDisplayName) document.querySelector('figcaption').textContent += `${' | ' + storedData.artistDisplayName}`;
   document.querySelector('aside').classList = '';
@@ -91,18 +105,20 @@ function storeImagesThumbnail() {
 }
 
 function prepareThumbnails() {
-
   for (let i = 0; i < thumbnailImgs.length; i++) {
     let li = document.createElement('li');
-    li.classList = 'thumbnailImg';
+    li.classList = `thumbnailImg n${i}`;
     li.style['background-image'] = `url(${thumbnailImgs[i]})`;
-    li.style['background-size'] = 'cover';
     li.addEventListener('click', () => {
       document.querySelector('img').src = smallImgs[i];
-      document.querySelector('#big').href = imgBank[i];
+      document.querySelector('.big').href = imgBank[i];
+      let string = String(document.querySelector('.thumbFocus').classList);
+      document.querySelector('.thumbFocus').classList = string.slice(0, -10);
+      document.querySelector(`.n${i}`).classList += ' thumbFocus';
     });
     document.querySelector('.slider').appendChild(li);
   }
+  document.querySelector('.thumbnailImg').classList += ' thumbFocus';
 }
 
 function prepareCarousel() {
@@ -144,7 +160,7 @@ function prepareCarousel() {
 }
 
 function getFetch() {
-  const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/464120`;
+  const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${Math.floor(Math.random() * 789811)}`;
   fetch(url)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
@@ -161,4 +177,5 @@ function getFetch() {
 }
 
 let testFetch = 464120;
+let testFetch2 = 685946;
 let randomFetch = `${Math.floor(Math.random() * 789811)}`;

@@ -266,6 +266,7 @@ h1 {
   width: 50%;
   height: 10rem;
   margin: 0 auto;
+  text-align: center;
 }
 
 .thumbnailCarousel:before, .thumbnailCarousel:after {
@@ -285,6 +286,7 @@ h1 {
 	white-space: nowrap;
 	font-size: 0;
 	cursor: pointer;
+  padding-left: 0;
 }
 
 .slider.active {
@@ -297,10 +299,20 @@ h1 {
   user-select: none;
   display: inline-block;
   margin-left: 1rem;
+  opacity: 0.4;
+  background-size: cover;
 }
 
-.thumbnailImg:after {
+.thumbnailImg:hover {
+  opacity: 1;
+}
+
+.thumbnailImg:last-child {
   margin-right: 1rem;
+}
+
+.thumbFocus {
+  opacity: 1;
 }
 
 aside {

@@ -262,24 +262,45 @@ h1 {
 }
 
 .thumbnailCarousel {
+  position: relative;
   width: 50%;
   height: 10rem;
-  overflow: hidden;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
+}
+
+.thumbnailCarousel:before, .thumbnailCarousel:after {
+  position: absolute;
+	top: 0;
+	z-index: 1;
+	content: "";
+	display: block;
+	width: 2rem;
+	height: 100%;
 }
 
 .slider {
-  display: flex;
-  padding-left: 0;
-  gap: 1rem;
-  margin: 0 auto;
+  position: relative;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 0;
+	cursor: pointer;
+}
+
+.slider.active {
+  cursor: grab;
 }
 
 .thumbnailImg {
   width: 8rem;
   height: 8rem;
+  user-select: none;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+.thumbnailImg:after {
+  margin-right: 1rem;
 }
 
 aside {

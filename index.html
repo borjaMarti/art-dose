@@ -2,34 +2,53 @@
 <html lang="en">
 	<head>
     	<meta charset="utf-8">
-    	<meta name="description" content="This is where your description goes">
-    	<meta name="keywords" content="one, two, three">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>Title in the tab</title>
+		<title>Art Dose</title>
 
-		<!-- external CSS link -->
 		<link rel="stylesheet" href="css/normalize.css">
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 
+		<!-- Header -->
 		<h1>Art Dose</h1>
 		<button type="button" name="button" class="button" id="button">Gimme Art</button>
 		
+
 		<figure class="hidden">
 			<div class="mainImgContainer">
 				<a href="" target="_blank" class="big"><img src="" alt="" class="mainImg"></a>
 			</div>
 			<figcaption class="caption"></figcaption>
+			
+			<!-- Controls -->
 			<nav class="imgNav hidden">
-				<span id="left" class="swap hidden">&lt;</span>
-				<a href="" target="_blank" class="big"><span class="navBtt">🔎</span></a>
-				<span id="right" class="swap hidden">&gt;</span>
+				<!-- Left -->
+				<svg width="24" height="24" fill="none" viewBox="0 0 24 24" id="left" class="swap hidden">
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.25 8.75L9.75 12L13.25 15.25"></path>
+				</svg>
+				<!-- Zoom -->
+				<a href="" target="_blank" class="big"><svg width="24" height="24" fill="none" viewBox="0 0 24 24" class="navBtt">
+					<circle cx="11" cy="11" r="6.25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle>
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.5 15.5L19.25 19.25"></path>
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 8.75V13.25"></path>
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.25 11L8.75 11"></path>
+				</svg></a>
+				<!-- Right -->
+				<svg width="24" height="24" fill="none" viewBox="0 0 24 24" id="right" class="swap hidden">
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.75 8.75L14.25 12L10.75 15.25"></path>
+				</svg>
 			</nav>
 		</figure>
+		
+		<!-- Carousel -->
 		<nav class="thumbnailCarousel">
 			<ul class="slider"></ul>
 		</nav>
+		
+		<!-- Piece info -->
 		<aside class="hidden">For more info on the piece, go <a href="" class="altLink" id="moreInfo" target="_blank">here.</a></aside>
 
 		<script type="text/javascript" src="js/main.js"></script>

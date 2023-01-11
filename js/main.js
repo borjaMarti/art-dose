@@ -1,26 +1,27 @@
 // Initialize.
-
-document.querySelector('button').addEventListener('click', getFetch);
+document.querySelector('#fetchArt').addEventListener('click', fetchData);
 
 // Stored data.
-
 let objectData;
 let largeImages = [];
 let webImages = [];
 let thumbnailImages = [];
 
-// Fetch call for random piece from the MET's collection.
+// Test object id
+let manyAdditionalImages = 464120;
 
-function getFetch() {
-  const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${Math.floor(Math.random() * 789811)}`;
-  fetch(url)
+// Fetch call for random piece from the MET's collection.
+function fetchData() {
+  let randomObjectId = Math.floor(Math.random() * 789811);
+  const URL = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${manyAdditionalImages}`;
+  fetch(URL)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
-        // Only return pieces with pictures.
+        // Only return objects with pictures.
         if (data.primaryImage) {
           objectData = data;
           processData();
-        } else getFetch();
+        } else fetchData();
       })
       .catch(err => {
           console.log(`error ${err}`)
@@ -28,18 +29,15 @@ function getFetch() {
 }
 
 // Prepare image and info display.
-
 function processData() {
   storeImages();
-  document.querySelector('.slider').textContent = '';
-  document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap hidden');
-  document.querySelector('figure').classList = '';
-
+  // Reset display elements for new fetch.
+  clearDisplay();
+  // Make sure pictures are in a supported format.
+  sanitizeImageFormat();
+  // In case of additional images, prepare navigational elements.
   if (objectData.additionalImages[0]) {
-    document.querySelector('#left').addEventListener('click', changeImageLeft);
-    document.querySelector('#right').addEventListener('click', changeImageRight);
-    document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap navBtt');
-    sanitizeImages();
+    prepareNavigationButtons();
     storeImagesThumbnail();
     prepareThumbnails();
     prepareCarousel();
@@ -55,53 +53,11 @@ function processData() {
   document.querySelector('#moreInfo').href = objectData.objectURL;
 }
 
-function sanitizeImages() {
-  objectData.additionalImages.forEach( (elem, index) => {
-    objectData.additionalImages[index] = elem.slice(0, elem.lastIndexOf('.') + 1) + 'jpg';
+function sanitizeImageFormat() {
+  largeImages.forEach( (elem, index) => {
+    largeImages[index] = elem.slice(0, elem.lastIndexOf('.') + 1) + 'jpg';
   });
 }
-
-function changeImageRight() {
-  let currentImg = document.querySelector('img').src;
-  let ulArray = [...document.querySelector('.slider').childNodes];
-  let thumbIndex = ulArray.findIndex( elem => String(elem.classList).includes('thumbFocus'));
-  let string = String(document.querySelector('.thumbFocus').classList);
-
-  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
-
-  if (webImages.indexOf(currentImg) === webImages.length - 1) {
-    document.querySelector('img').src = webImages[0];
-    document.querySelector('.big').href = largeImages[0];
-    ulArray[0].classList += ' thumbFocus';
-  }
-  else  {
-    document.querySelector('img').src = webImages[webImages.indexOf(currentImg) + 1];
-    document.querySelector('.big').href = largeImages[webImages.indexOf(currentImg) + 1];
-    ulArray[thumbIndex + 1].classList += ' thumbFocus';
-  }
-}
-
-function changeImageLeft() {
-  let currentImg = document.querySelector('img').src;
-  let ulArray = [...document.querySelector('.slider').childNodes];
-  let thumbIndex = ulArray.findIndex( elem => String(elem.classList).includes('thumbFocus'));
-  let string = String(document.querySelector('.thumbFocus').classList);
-
-  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
-
-  if (webImages.indexOf(currentImg) === 0) {
-    document.querySelector('img').src = webImages[webImages.length - 1];
-    document.querySelector('.big').href = largeImages[webImages.length - 1];
-    ulArray[webImages.length - 1].classList += ' thumbFocus';
-  }
-  else {
-    document.querySelector('img').src = webImages[webImages.indexOf(currentImg) - 1];
-    document.querySelector('.big').href = largeImages[webImages.indexOf(currentImg) - 1];
-    ulArray[thumbIndex - 1].classList += ' thumbFocus';
-  }
-}
-
-
 
 function storeImages() {
   largeImages = [];
@@ -116,6 +72,57 @@ function storeImagesPreview() {
     small.splice(42, 8, 'web-large');
     webImages.push(small.join(''));
   });
+}
+
+function clearDisplay() {
+  document.querySelector('.slider').textContent = '';
+  document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap hidden');
+  document.querySelector('figure').classList = '';
+}
+
+// Additional images work
+function prepareNavigationButtons() {
+  document.querySelector('#left').addEventListener('click', changeImageLeft);
+  document.querySelector('#right').addEventListener('click', changeImageRight);
+  document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap navBtt');
+}
+
+function changeImageRight() {
+  let currentPicture = document.querySelector('img').src;
+  let thumbnailList = [...document.querySelector('.slider').childNodes];
+  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('thumbFocus'));
+  let string = String(document.querySelector('.thumbFocus').classList);
+
+  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
+
+  if (webImages.indexOf(currentPicture) === webImages.length - 1) {
+    document.querySelector('img').src = webImages[0];
+    document.querySelector('.big').href = largeImages[0];
+    thumbnailList[0].classList += ' thumbFocus';
+  } else  {
+    document.querySelector('img').src = webImages[webImages.indexOf(currentPicture) + 1];
+    document.querySelector('.big').href = largeImages[webImages.indexOf(currentPicture) + 1];
+    thumbnailList[currentThumbnailIndex + 1].classList += ' thumbFocus';
+  }
+}
+
+function changeImageLeft() {
+  let currentPicture = document.querySelector('img').src;
+  let thumbnailList = [...document.querySelector('.slider').childNodes];
+  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('thumbFocus'));
+  let string = String(document.querySelector('.thumbFocus').classList);
+
+  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
+
+  if (webImages.indexOf(currentPicture) === 0) {
+    document.querySelector('img').src = webImages[webImages.length - 1];
+    document.querySelector('.big').href = largeImages[webImages.length - 1];
+    thumbnailList[webImages.length - 1].classList += ' thumbFocus';
+  } else {
+    document.querySelector('img').src = webImages[webImages.indexOf(currentPicture) - 1];
+    document.querySelector('.big').href = largeImages[webImages.indexOf(currentPicture) - 1];
+    thumbnailList[currentThumbnailIndex - 1].classList += ' thumbFocus';
+  }
 }
 
 function storeImagesThumbnail() {
@@ -181,9 +188,3 @@ function prepareCarousel() {
     slider.scrollLeft = scrollLeft - dist;
   }
 }
-
-
-
-let testFetch = 464120;
-let testFetch2 = 685946;
-let randomFetch = `${Math.floor(Math.random() * 789811)}`;

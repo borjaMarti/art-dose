@@ -31,8 +31,8 @@ function fetchData() {
 // Prepare image and info display.
 function processData() {
   storeImages();
-  // Reset display elements for new fetch.
-  clearDisplay();
+  // Prepare display elements for new fetch.
+  prepareDisplay();
   // Make sure pictures are in a supported format.
   sanitizeImageFormat();
   // In case of additional images, prepare navigational elements.
@@ -74,54 +74,53 @@ function storeImagesPreview() {
   });
 }
 
-function clearDisplay() {
+function prepareDisplay() {
   document.querySelector('.slider').textContent = '';
-  document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap hidden');
+  document.querySelectorAll('.switch').forEach( elem => elem.classList = 'switch hidden');
   document.querySelector('figure').classList = '';
 }
 
 // Additional images work
 function prepareNavigationButtons() {
-  document.querySelector('#left').addEventListener('click', changeImageLeft);
-  document.querySelector('#right').addEventListener('click', changeImageRight);
-  document.querySelectorAll('.swap').forEach( elem => elem.classList = 'swap navBtt');
+  document.querySelector('#left').addEventListener('click', () => changeImage('left'));
+  document.querySelector('#right').addEventListener('click', () => changeImage('right'));
+  document.querySelectorAll('.switch').forEach( elem => elem.classList = 'switch');
 }
 
-function changeImageRight() {
-  let currentPicture = document.querySelector('img').src;
+function changeImage(direction) {
+  let currentPicture = document.querySelector('.mainPicture');
+  let currentPictureLink = document.querySelectorAll('.big');
   let thumbnailList = [...document.querySelector('.slider').childNodes];
-  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('thumbFocus'));
-  let string = String(document.querySelector('.thumbFocus').classList);
+  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('focusedThumbnail'));
+  let currentThumbnail = document.querySelector('.focusedThumbnail');
+  
+  // Reset focused thumbnail.
+  currentThumbnail.classList = String(currentThumbnail.classList).slice(0, -16);
+  // Change current picture, its link, and thumbnail focus, taking into account direction and current list position.
+  switch (direction) {
+    case 'right':
+      if (webImages.indexOf(currentPicture.src) !== webImages.length - 1) {
+        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.indexOf(currentPicture.src) + 1]);
+        currentPicture.src = webImages[webImages.indexOf(currentPicture.src) + 1];
+        thumbnailList[currentThumbnailIndex + 1].classList += ' focusedThumbnail';
+      } else  {
+        currentPictureLink.forEach(elem => elem.href = largeImages[0]);
+        currentPicture.src = webImages[0];
+        thumbnailList[0].classList += ' focusedThumbnail';
+      }
+      break;
 
-  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
-
-  if (webImages.indexOf(currentPicture) === webImages.length - 1) {
-    document.querySelector('img').src = webImages[0];
-    document.querySelector('.big').href = largeImages[0];
-    thumbnailList[0].classList += ' thumbFocus';
-  } else  {
-    document.querySelector('img').src = webImages[webImages.indexOf(currentPicture) + 1];
-    document.querySelector('.big').href = largeImages[webImages.indexOf(currentPicture) + 1];
-    thumbnailList[currentThumbnailIndex + 1].classList += ' thumbFocus';
-  }
-}
-
-function changeImageLeft() {
-  let currentPicture = document.querySelector('img').src;
-  let thumbnailList = [...document.querySelector('.slider').childNodes];
-  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('thumbFocus'));
-  let string = String(document.querySelector('.thumbFocus').classList);
-
-  document.querySelector('.thumbFocus').classList = string.slice(0, -10);
-
-  if (webImages.indexOf(currentPicture) === 0) {
-    document.querySelector('img').src = webImages[webImages.length - 1];
-    document.querySelector('.big').href = largeImages[webImages.length - 1];
-    thumbnailList[webImages.length - 1].classList += ' thumbFocus';
-  } else {
-    document.querySelector('img').src = webImages[webImages.indexOf(currentPicture) - 1];
-    document.querySelector('.big').href = largeImages[webImages.indexOf(currentPicture) - 1];
-    thumbnailList[currentThumbnailIndex - 1].classList += ' thumbFocus';
+    case 'left':
+      if (webImages.indexOf(currentPicture.src) !== 0) {
+        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.indexOf(currentPicture.src) - 1]);
+        currentPicture.src = webImages[webImages.indexOf(currentPicture.src) - 1];
+        thumbnailList[currentThumbnailIndex - 1].classList += ' focusedThumbnail';
+      } else {
+        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.length - 1]);
+        currentPicture.src = webImages[webImages.length - 1];
+        thumbnailList[webImages.length - 1].classList += ' focusedThumbnail';
+      }
+      break;
   }
 }
 
@@ -142,13 +141,13 @@ function prepareThumbnails() {
     li.addEventListener('click', () => {
       document.querySelector('img').src = webImages[i];
       document.querySelector('.big').href = largeImages[i];
-      let string = String(document.querySelector('.thumbFocus').classList);
-      document.querySelector('.thumbFocus').classList = string.slice(0, -10);
-      document.querySelector(`.n${i}`).classList += ' thumbFocus';
+      let string = String(document.querySelector('.focusedThumbnail').classList);
+      document.querySelector('.focusedThumbnail').classList = string.slice(0, -10);
+      document.querySelector(`.n${i}`).classList += ' focusedThumbnail';
     });
     document.querySelector('.slider').appendChild(li);
   }
-  document.querySelector('.thumbnailImg').classList += ' thumbFocus';
+  document.querySelector('.thumbnailImg').classList += ' focusedThumbnail';
 }
 
 function prepareCarousel() {

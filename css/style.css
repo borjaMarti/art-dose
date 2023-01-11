@@ -107,7 +107,7 @@ body {
   color: #036564;
 }
 
-img::selection, .navBtt::selection {
+img::selection, .navButton::selection {
   background-color: transparent;
   color: white;
 }
@@ -196,7 +196,7 @@ h1 {
   transform: translateY(0);
 }
 
-.mainImgContainer {
+.mainPictureContainer {
   display: flex;
   height: 600px;
   width: 100%;
@@ -207,7 +207,7 @@ h1 {
   border-radius: 3rem;
 }
 
-.mainImg {
+.mainPicture {
   max-height: 600px;
   max-width: 100%;
 }
@@ -230,7 +230,7 @@ h1 {
   color: white;
 }
 
-.navBtt {
+.switch {
   cursor: pointer;
 }
 
@@ -282,7 +282,7 @@ h1 {
   margin-right: 1rem;
 }
 
-.thumbFocus {
+.focusedThumbnail {
   opacity: 1;
 }
 

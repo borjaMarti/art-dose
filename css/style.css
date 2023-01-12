@@ -73,6 +73,7 @@ body {
   margin: 0 auto;
   padding: 1.6rem;
   overflow-anchor: none;
+  text-align: center;
 }
 
 @media screen and (min-width: 640px) {
@@ -121,6 +122,7 @@ img::selection {
 .link {
   color: #777777;
   transition: color 0.3s ease-in-out;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .link:hover {
@@ -142,13 +144,14 @@ img::selection {
 
 .mainFooter {
   padding-top: 2.2rem;
-  border-top: 1px solid #4e4e4e;
-  font-size: 1.6rem;
+  margin-top: 10rem;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
 @media screen and (min-width: 640px) {
   .mainFooter { 
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -158,6 +161,10 @@ img::selection {
 
 h1 {
   margin-top: 0;
+}
+
+p, h1 {
+  text-align: start;
 }
 
 .button {
@@ -172,7 +179,7 @@ h1 {
   display: inline-flex;
   justify-content: center;
   line-height: 1.25;
-  margin: 0;
+  margin: 5rem 0;
   min-height: 3rem;
   padding: .875rem 1.5rem;
   position: relative;
@@ -212,25 +219,25 @@ h1 {
   max-width: 100%;
 }
 
-.imgNav {
+.imageControls {
   display: flex;
   gap: 2rem;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 1rem 0;
+  margin: 2rem 0;
 }
 
-.imgNav .big {
+.imageControls .zoom {
   font-size: 0;
   color: white;
 }
 
-.big:visited {
+.zoom:visited {
   color: white;
 }
 
-.switch {
+.imageSwitch {
   cursor: pointer;
 }
 
@@ -246,7 +253,7 @@ h1 {
   position: relative;
   width: 60rem;
   height: 8rem;
-  margin: 0 auto;
+  margin: 2rem auto 5rem auto;
   text-align: center;
 }
 

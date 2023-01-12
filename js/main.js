@@ -31,8 +31,8 @@ function fetchData() {
 // Prepare image and info display.
 function processData() {
   storeImages();
-  // Prepare display elements for new fetch.
-  prepareDisplay();
+  // Reset display elements for new fetch.
+  resetDisplay();
   // Make sure pictures are in a supported format.
   sanitizeImageFormat();
   // In case of additional images, prepare navigational elements.
@@ -42,17 +42,31 @@ function processData() {
     prepareThumbnails();
     prepareCarousel();
   }
-  
+  // Prepare displayed-on-page image bank.
   storeImagesPreview();
+  // Show pictures and information on the page.
+  displayInfo();
+}
+
+function displayInfo() {
+  // Display first picture, set-up respective link and info.
   document.querySelector('img').src = webImages[0];
-  document.querySelectorAll('.big').forEach( elem => elem.href = largeImages[0]);
+  document.querySelectorAll('.zoom').forEach( elem => elem.href = largeImages[0]);
   document.querySelector('figcaption').textContent = `${objectData.title}${', ' + objectData.objectDate}`;
   if (objectData.artistDisplayName) document.querySelector('figcaption').textContent += `${' | ' + objectData.artistDisplayName}`;
-  document.querySelector('aside').classList = '';
-  document.querySelector('nav').classList = 'imgNav';
+  // Display controls and extra info.
+  document.querySelector('aside').classList.remove('hidden');
+  document.querySelector('.imageControls').classList.remove('hidden');
   document.querySelector('#moreInfo').href = objectData.objectURL;
 }
 
+function resetDisplay() {
+  document.querySelector('.slider').textContent = '';
+  document.querySelectorAll('.imageSwitch').forEach( elem => elem.classList.add('hidden'));
+  document.querySelector('#pictureDisplay').classList.remove('hidden');
+}
+
+// Image preparation
 function sanitizeImageFormat() {
   largeImages.forEach( (elem, index) => {
     largeImages[index] = elem.slice(0, elem.lastIndexOf('.') + 1) + 'jpg';
@@ -68,60 +82,17 @@ function storeImages() {
 function storeImagesPreview() {
   webImages = [];
   largeImages.forEach( elem => {
-    let small = elem.split('');
-    small.splice(42, 8, 'web-large');
-    webImages.push(small.join(''));
+    let webImage = elem.split('');
+    webImage.splice(42, 8, 'web-large');
+    webImages.push(webImage.join(''));
   });
 }
 
-function prepareDisplay() {
-  document.querySelector('.slider').textContent = '';
-  document.querySelectorAll('.switch').forEach( elem => elem.classList = 'switch hidden');
-  document.querySelector('figure').classList = '';
-}
-
-// Additional images work
+// Additional images preparation
 function prepareNavigationButtons() {
-  document.querySelector('#left').addEventListener('click', () => changeImage('left'));
-  document.querySelector('#right').addEventListener('click', () => changeImage('right'));
-  document.querySelectorAll('.switch').forEach( elem => elem.classList = 'switch');
-}
-
-function changeImage(direction) {
-  let currentPicture = document.querySelector('.mainPicture');
-  let currentPictureLink = document.querySelectorAll('.big');
-  let thumbnailList = [...document.querySelector('.slider').childNodes];
-  let currentThumbnailIndex = thumbnailList.findIndex( elem => String(elem.classList).includes('focusedThumbnail'));
-  let currentThumbnail = document.querySelector('.focusedThumbnail');
-  
-  // Reset focused thumbnail.
-  currentThumbnail.classList = String(currentThumbnail.classList).slice(0, -16);
-  // Change current picture, its link, and thumbnail focus, taking into account direction and current list position.
-  switch (direction) {
-    case 'right':
-      if (webImages.indexOf(currentPicture.src) !== webImages.length - 1) {
-        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.indexOf(currentPicture.src) + 1]);
-        currentPicture.src = webImages[webImages.indexOf(currentPicture.src) + 1];
-        thumbnailList[currentThumbnailIndex + 1].classList += ' focusedThumbnail';
-      } else  {
-        currentPictureLink.forEach(elem => elem.href = largeImages[0]);
-        currentPicture.src = webImages[0];
-        thumbnailList[0].classList += ' focusedThumbnail';
-      }
-      break;
-
-    case 'left':
-      if (webImages.indexOf(currentPicture.src) !== 0) {
-        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.indexOf(currentPicture.src) - 1]);
-        currentPicture.src = webImages[webImages.indexOf(currentPicture.src) - 1];
-        thumbnailList[currentThumbnailIndex - 1].classList += ' focusedThumbnail';
-      } else {
-        currentPictureLink.forEach(elem => elem.href = largeImages[webImages.length - 1]);
-        currentPicture.src = webImages[webImages.length - 1];
-        thumbnailList[webImages.length - 1].classList += ' focusedThumbnail';
-      }
-      break;
-  }
+  document.querySelector('#left').addEventListener('click', () => navigatePictures('left'));
+  document.querySelector('#right').addEventListener('click', () => navigatePictures('right'));
+  document.querySelectorAll('.imageSwitch').forEach( elem => elem.classList.remove('hidden'));
 }
 
 function storeImagesThumbnail() {
@@ -136,25 +107,21 @@ function storeImagesThumbnail() {
 function prepareThumbnails() {
   for (let i = 0; i < thumbnailImages.length; i++) {
     let li = document.createElement('li');
-    li.classList = `thumbnailImg n${i}`;
+    li.classList.add('thumbnailImg', `n${i}`);
     li.style['background-image'] = `url(${thumbnailImages[i]})`;
     li.addEventListener('click', () => {
-      document.querySelector('img').src = webImages[i];
-      document.querySelector('.big').href = largeImages[i];
-      let string = String(document.querySelector('.focusedThumbnail').classList);
-      document.querySelector('.focusedThumbnail').classList = string.slice(0, -10);
-      document.querySelector(`.n${i}`).classList += ' focusedThumbnail';
+      changeCurrentPicture(i);
     });
     document.querySelector('.slider').appendChild(li);
   }
-  document.querySelector('.thumbnailImg').classList += ' focusedThumbnail';
+  document.querySelector('.thumbnailImg').classList.add('focusedThumbnail');
 }
 
 function prepareCarousel() {
-  let isDown = false;
+  let mouseDown = false;
   let startX;
   let scrollLeft;
-  const slider = document.querySelector('.slider');
+  let slider = document.querySelector('.slider');
 
   slider.addEventListener('mousedown', start);
 	slider.addEventListener('touchstart', start);
@@ -165,25 +132,55 @@ function prepareCarousel() {
 	slider.addEventListener('mouseleave', end);
 	slider.addEventListener('mouseup', end);
 	slider.addEventListener('touchend', end);
+  
+  function move(event) {
+    if(!mouseDown) return;
 
-  function end() {
-    isDown = false;
-    slider.classList.remove('active');
+    event.preventDefault();
+    let x = event.pageX || event.touches[0].pageX - slider.offsetLeft;
+    let distance = (x - startX);
+    slider.scrollLeft = scrollLeft - distance;
   }
 
-  function start(e) {
-    isDown = true;
+  function start(event) {
+    mouseDown = true;
     slider.classList.add('active');
-    startX = e.pageX || e.touches[0].pageX - slider.offsetLeft;
+    startX = event.pageX || event.touches[0].pageX - slider.offsetLeft;
     scrollLeft = slider.scrollLeft;	
   }
 
-  function move(e) {
-    if(!isDown) return;
-
-    e.preventDefault();
-    const x = e.pageX || e.touches[0].pageX - slider.offsetLeft;
-    const dist = (x - startX);
-    slider.scrollLeft = scrollLeft - dist;
+  function end() {
+    mouseDown = false;
+    slider.classList.remove('active');
   }
+}
+
+function navigatePictures(direction) {
+  let currentPictureIndex = webImages.indexOf(document.querySelector('.mainPicture').src);
+  
+  // Change current picture, its link, and thumbnail focus, taking into account direction and current list position.
+  switch (direction) {
+    case 'right':
+      if (currentPictureIndex !== webImages.length - 1) {
+        changeCurrentPicture(currentPictureIndex + 1)
+      } else  {
+        changeCurrentPicture(0);
+      }
+      break;
+
+    case 'left':
+      if (currentPictureIndex !== 0) {
+        changeCurrentPicture(currentPictureIndex - 1);
+      } else {
+        changeCurrentPicture(webImages.length - 1);
+      }
+      break;
+  }
+}
+
+function changeCurrentPicture(i) {
+  document.querySelector('.mainPicture').src = webImages[i];
+  document.querySelectorAll('.zoom').forEach(elem => elem.href = largeImages[i]);
+  document.querySelector('.focusedThumbnail').classList.remove('focusedThumbnail');
+  document.querySelector(`.n${i}`).classList.add('focusedThumbnail');
 }

@@ -6,6 +6,7 @@ let objectData;
 let largeImages = [];
 let webImages = [];
 let thumbnailImages = [];
+let currentPictureIndex = 0;
 
 // Test object id
 let manyAdditionalImages = 464120;
@@ -157,8 +158,6 @@ function prepareCarousel() {
 }
 
 function navigatePictures(direction) {
-  let currentPictureIndex = webImages.indexOf(document.querySelector('.mainPicture').src);
-  
   // Change current picture, its link, and thumbnail focus, taking into account direction and current list position.
   switch (direction) {
     case 'right':
@@ -180,6 +179,7 @@ function navigatePictures(direction) {
 }
 
 function changeCurrentPicture(i) {
+  currentPictureIndex = i;
   document.querySelector('.mainPicture').src = webImages[i];
   document.querySelectorAll('.zoom').forEach(elem => elem.href = largeImages[i]);
   document.querySelector('.focusedThumbnail').classList.remove('focusedThumbnail');

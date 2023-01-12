@@ -13,7 +13,7 @@ let manyAdditionalImages = 464120;
 // Fetch call for random piece from the MET's collection.
 function fetchData() {
   let randomObjectId = Math.floor(Math.random() * 789811);
-  const URL = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${manyAdditionalImages}`;
+  const URL = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomObjectId}`;
   fetch(URL)
       .then(res => res.json()) // parse response as JSON
       .then(data => {

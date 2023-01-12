@@ -203,6 +203,10 @@ p, h1 {
   transform: translateY(0);
 }
 
+.pictureDisplay {
+  margin: 0;
+}
+
 .mainPictureContainer {
   display: flex;
   height: 600px;
@@ -216,7 +220,6 @@ p, h1 {
 
 .mainPicture {
   max-height: 600px;
-  max-width: 100%;
 }
 
 .imageControls {
@@ -251,7 +254,7 @@ p, h1 {
 
 .thumbnailCarousel {
   position: relative;
-  width: 60rem;
+  max-width: 60rem;
   height: 8rem;
   margin: 2rem auto 5rem auto;
   text-align: center;
@@ -285,8 +288,8 @@ p, h1 {
   opacity: 1;
 }
 
-.thumbnailImg:last-child {
-  margin-right: 1rem;
+.thumbnailImg:first-child {
+  margin-left: 0;
 }
 
 .focusedThumbnail {

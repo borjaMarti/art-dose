@@ -9,6 +9,7 @@ let thumbnailImages = [];
 
 // Test object id
 let manyAdditionalImages = 464120;
+let manyManyAdditionalImages = 57791;
 
 // Fetch call for random piece from the MET's collection.
 function fetchData() {

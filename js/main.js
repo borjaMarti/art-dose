@@ -92,8 +92,8 @@ function storeImagesPreview() {
 
 // Additional images preparation
 function prepareNavigationButtons() {
-  document.querySelector('#left').addEventListener('click', () => navigatePictures('left'));
-  document.querySelector('#right').addEventListener('click', () => navigatePictures('right'));
+  document.querySelector('#left').addEventListener('click', navigatePicturesLeft);
+  document.querySelector('#right').addEventListener('click', navigatePicturesRight);
   document.querySelectorAll('.imageSwitch').forEach( elem => elem.classList.remove('hidden'));
 }
 
@@ -157,24 +157,19 @@ function prepareCarousel() {
   }
 }
 
-function navigatePictures(direction) {
-  // Change current picture, its link, and thumbnail focus, taking into account direction and current list position.
-  switch (direction) {
-    case 'right':
-      if (currentPictureIndex !== webImages.length - 1) {
-        changeCurrentPicture(currentPictureIndex + 1)
-      } else  {
-        changeCurrentPicture(0);
-      }
-      break;
+function navigatePicturesLeft() {
+  if (currentPictureIndex !== 0) {
+    changeCurrentPicture(currentPictureIndex - 1);
+  } else {
+    changeCurrentPicture(webImages.length - 1);
+  }
+}
 
-    case 'left':
-      if (currentPictureIndex !== 0) {
-        changeCurrentPicture(currentPictureIndex - 1);
-      } else {
-        changeCurrentPicture(webImages.length - 1);
-      }
-      break;
+function navigatePicturesRight() {
+  if (currentPictureIndex !== webImages.length - 1) {
+    changeCurrentPicture(currentPictureIndex + 1)
+  } else  {
+    changeCurrentPicture(0);
   }
 }
 

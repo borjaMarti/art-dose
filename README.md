@@ -4,7 +4,7 @@ This web application allows the user to explore and draw inspiration from random
 
 **Link to project:** https://borjamarti.github.io/artDose/
 
-<img src="assets/artdose.gif" alt="Gif showing the web app functionality and design.">
+<img src="assets/art-dose.gif" alt="Gif showing the web app functionality and design.">
 
 ## How It's Made:
 

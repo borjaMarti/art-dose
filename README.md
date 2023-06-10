@@ -2,9 +2,11 @@
 
 This web application allows the user to explore and draw inspiration from random pieces of art that are part of The Metropolitan Museum of New York's collection. The application is fully responsive to the device's viewport size.
 
-**Link to project:** https://borjamarti.github.io/artDose/
+**Link to the project:** https://borjamarti.github.io/art-dose/
 
-<img src="assets/art-dose.gif" alt="Gif showing the web app functionality and design.">
+<a href="https://borjamarti.github.io/art-dose/" align="center">
+    <img src="assets/art-dose.gif" alt="Gif showing app functionality and design."/>
+</a>
 
 ## How It's Made:
 
